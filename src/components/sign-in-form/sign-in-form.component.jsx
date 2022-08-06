@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import './sign-in-form.styles.scss'
 import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
+
+import {UserContext} from '../../contexts/user.context';
 
 import { signInPopup, authUserEmailPassword, UserDocfromAuth, authUserEmailPasswordSignIn } from '../../utils/firebase/firebase.utils'
 const defaultFormFields = {
@@ -15,13 +17,15 @@ const SignInForm = () => {
     
     const [formFields, setFormFields] = useState(defaultFormFields);
     const {email, password} = formFields;
+
+    // const { setCurrentUser } = useContext(UserContext);
     
     const signInWithGoogle = async () => {
-        const {user} = await signInPopup();
+        await signInPopup();
         // console.log(response);
         // console.log(user.displayName);
         // UserDocfromAuth(user);
-        await UserDocfromAuth(user);
+        // await UserDocfromAuth(user);
     }
 
     // this clears out the input fields after the submit button is clicked.
@@ -39,7 +43,8 @@ const SignInForm = () => {
                 password
             );
             // console.log(response);
-            await UserDocfromAuth(user, { displayName })
+            // await UserDocfromAuth(user, { displayName })
+            // setCurrentUser(user);
             resetFormFields();
         } catch (error) {
             switch (error.code) {
