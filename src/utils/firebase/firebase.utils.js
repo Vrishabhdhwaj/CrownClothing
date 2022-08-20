@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signOut} from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc} from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs} from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBj4K4PET6-ttkRi6a9YYfluhkXBR7MoSE",
@@ -25,6 +25,33 @@ export const signInPopup = () => signInWithPopup(auth, provider);
 export const signInRedirect = () => signInWithRedirect(auth, provider);///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const firestore_db = getFirestore();
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(firestore_db, collectionKey);
+    const batch = writeBatch(firestore_db);
+
+    objectsToAdd.forEach((object) => {
+        const docRefCollection = doc(collectionRef);
+        batch.set(docRefCollection, object);
+    });
+
+    await batch.commit();
+    console.log("Batch commit done");
+}
+
+export const getCategoriesAndDocuments = async () => {
+    const collectionRef = collection(firestore_db, 'categories');
+    const q = query(collectionRef);
+    const querySnapshot = await getDocs(q);
+    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+        const {title, items} = docSnapshot.data()
+        acc[title.toLowerCase()] = items;
+        return acc;
+    }, {});
+
+    return categoryMap;
+}
+
 export const UserDocfromAuth = async (userAuth, additionalInfo = {}) => {
     if (!userAuth) return;
     const userDocReference = doc(firestore_db, 'users', userAuth.uid)

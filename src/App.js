@@ -1,5 +1,5 @@
 import './categories.styles.scss'
-import CategoryItem from './components/category_item/category_item.component'
+// import CategoryItem from './components/category_item/category_item.component'
 import { Route, Routes, Outlet } from 'react-router-dom';
 
 import Home from './routes/home/home.component';
@@ -18,7 +18,7 @@ const App = () => {
     <Routes>
       <Route path='/' element={<Navigation />}>
         <Route index element={<Home />} />
-        <Route path='shop' element={<Shop />} />
+        <Route path='shop/*' element={<Shop />} />
         <Route path='auth' element={<Authentication />} />
         <Route path='checkout' element={<Checkout />} />
       </Route>

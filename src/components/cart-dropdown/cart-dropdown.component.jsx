@@ -4,6 +4,7 @@ import CartItem from '../cart-item/cart-item.component';
 import {CartContext} from '../../contexts/cart.context'
 import {useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {CartDropdownContainer, CartItems, EmptyMessage} from './cart-dropdown.styles';
 const CartDropdown = () => {
     const {cartItems} = useContext(CartContext);
     const navigate = useNavigate();
@@ -13,14 +14,16 @@ const CartDropdown = () => {
     
 
     return (
-        <div className='cart-dropdown-container'>
-            <div className='cart-items'>
-                {cartItems.map((item) => (
-                    <CartItem key={item.id} cartItem={item} />
-                ))}
+        <CartDropdownContainer>
+            <CartItems>
+                {cartItems.length ? (
+                    cartItems.map((item) => <CartItem key={item.id} cartItem={item} />)
+                ) : (
+                    <EmptyMessage>Fill up that Jholi first.</EmptyMessage>
+                )}
                 <Button onClick={goToCheckoutHandler}>Checkout</Button>
-            </div>
-        </div>
+            </CartItems>
+        </CartDropdownContainer>
     );
 };
 
